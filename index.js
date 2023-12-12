@@ -32,8 +32,8 @@ try {
 }
 
 db.sequelize.sync({ alter: true }).then(() => {
-    app.listen(3002, () => {
-        console.log("SERVER RUNNING ON PORT 3002");
+    app.listen(3001, () => {
+        console.log("SERVER RUNNING ON PORT 3001");
     });
 
     // app.listen(PORT,HOST,() => console.log(`Server running on ${HOST} at ${PORT}`));
