@@ -7,7 +7,7 @@ const dotEnv = require('dotenv');
 dotEnv.config();
 
 // Set default values for PORT and HOST
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 443;
 const HOST = process.env.HOST || '0.0.0.0';
 
 app.use(express.json());
