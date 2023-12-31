@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "1234",
-    "database": "atabase_production",
+    "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
