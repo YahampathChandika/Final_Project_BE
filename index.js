@@ -5,8 +5,8 @@ const dotEnv = require("dotenv")
 
 dotEnv.config()
 
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || "10.10.92.143"
+const PORT = process.env.PORT || 4000;
+const HOST = process.env.HOST || "44.208.32.102"
 app.use(express.json());
 app.use(cors());
 
