@@ -7,6 +7,7 @@ async function registerUser(req, res) {
     try {
         const userRole_id = req.user.roleId;
         const {firstName, lastName,email,contactNo, username, password, roleId } = req.body;
+        const image = req.file.path;
 
         console.log(userRole_id)
 
@@ -15,7 +16,7 @@ async function registerUser(req, res) {
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
-        const result = await userService.createUser(firstName, lastName,email,contactNo,username, hashPassword, roleId);
+        const result = await userService.createUser(firstName, lastName,email,contactNo,username, hashPassword, roleId, image);
         
         if(result.error) {
             return res.status(result.status).json ({
