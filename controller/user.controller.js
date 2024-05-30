@@ -8,6 +8,8 @@ async function registerUser(req, res) {
         const userRole_id = req.user.roleId;
         const {firstName, lastName,email,contactNo, username, password, roleId } = req.body;
 
+        console.log(userRole_id)
+
         if (![1].includes(userRole_id)) {
             return res.status(403).json({ error: true, payload: "Unauthorized. Only Admins can create users." });
         }

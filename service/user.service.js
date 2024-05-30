@@ -54,7 +54,7 @@ async function createUser(firstName, lastName,email, contactNo,username, hashPas
           return {            
             error: false,
             status: 200,
-            payload: "User Successfully Created"
+                payload: "User Successfully Created"
         }
 
     } catch (error) {
