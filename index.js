@@ -16,6 +16,9 @@ const db = require("./models");
 const routes = require("./routes/index.routes");
 app.use("/", routes);
 
+//static Images Folder
+app.use('/images', express.static('./images'))
+
 try {
 
     db.Admissions.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId", onDelete: 'cascade'});
