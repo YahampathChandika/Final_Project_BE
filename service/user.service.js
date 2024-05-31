@@ -101,6 +101,7 @@ async function getAllUsers(){
         const userResponse = listOfUsers.map((user, index) => {
             return {
                 id: user.id,
+                image: user.image,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
@@ -225,6 +226,7 @@ async function getUserById(id) {
 
         const response = {
             id: user.id,
+            image: user.image,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
