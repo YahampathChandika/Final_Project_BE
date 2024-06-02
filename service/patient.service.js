@@ -1,6 +1,6 @@
 const { Sequelize, where } = require("sequelize");
 const db = require("../models");
-const { Patients, Admissions, Beds } = require("../models");
+const { Patients, Admissions, Beds, ReferenceNumbers } = require("../models");
 
 //Register a patient.
 async function registerPatient(patient) {
@@ -10,7 +10,6 @@ async function registerPatient(patient) {
             id: patient.bedId,
             available: true
         }});
-        console.log("Bed: ", isBedAvailable)
         if(isBedAvailable == null) {
             return {
                 error: true,
@@ -18,8 +17,17 @@ async function registerPatient(patient) {
                 payload: "Sorry the bed is not available at the moment."
             }
         } else {
+
+            const hospitalId = await ReferenceNumbers.findOne({
+                where: {
+                    id: 1
+                }
+            })
+
+            console.log("h1: ",hospitalId)
+            
             const newPatient = await Patients.create({
-            hospitalId: patient.hospitalId,
+            hospitalId: hospitalId.value,
             firstName: patient.firstName,
             lastName: patient.lastName,
             gender: patient.gender,
@@ -45,7 +53,10 @@ async function registerPatient(patient) {
         }
         );
 
-        const bed = await Beds.update({available: false,}, {where: {id: patient.bedId}});
+        await Beds.update({available: false,}, {where: {id: patient.bedId}});
+        
+        const newHospitalId = hospitalId.value + 1
+        await ReferenceNumbers.update({value: newHospitalId}, {where: {label: "hospitalId"}})
 
         return {
             error: false,
