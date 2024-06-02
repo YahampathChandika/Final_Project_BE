@@ -23,8 +23,6 @@ async function registerPatient(patient) {
                     id: 1
                 }
             })
-
-            console.log("h1: ",hospitalId)
             
             const newPatient = await Patients.create({
             hospitalId: hospitalId.value,
@@ -54,7 +52,7 @@ async function registerPatient(patient) {
         );
 
         await Beds.update({available: false,}, {where: {id: patient.bedId}});
-        
+
         const newHospitalId = hospitalId.value + 1
         await ReferenceNumbers.update({value: newHospitalId}, {where: {label: "hospitalId"}})
 
