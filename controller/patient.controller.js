@@ -1,4 +1,5 @@
 const patientService = require("../service/patient.service");
+const vitalService = require("../service/vitals.service");
 
 //Function for register a patient.
 async function registerPatient(req, res) {
@@ -141,6 +142,15 @@ async function getPatientById(req, res) {
         }
         
         const result = await patientService.getPatientById(id);
+        const vitalSigns = await vitalService.getVitalSigns(id);
+        const alerts = await vitalService.getAlerts(id);
+
+        var response = {
+            patient: result.payload,
+            vitalSigns: vitalSigns.payload,
+            alerts: alerts.payload
+        }
+
 
         if(result.error) {
             return res.status(result.status).json ({
@@ -150,7 +160,7 @@ async function getPatientById(req, res) {
         } else {
             return res.status(result.status).json ({
                 error: false,
-                payload: result.payload
+                payload: response
             })
         }
 
