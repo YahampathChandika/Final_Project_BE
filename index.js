@@ -30,6 +30,9 @@ try {
     db.Admissions.belongsTo(db.Beds, {as: "bed", foreignKey: "bedId"});
     db.Beds.hasMany(db.Admissions, {as: "admissions", foreignKey: "bedId"});
 
+    db.Alerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.Alerts, { as: "alerts", foreignKey: "PatientId"});
+
 } catch (error) {
     console.log(error);
 }
