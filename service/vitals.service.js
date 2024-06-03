@@ -24,7 +24,6 @@ async function addVitalSigns(vitalSigns, patientId) {
 }
 
 //Create Alerts
-//Create Alerts
 async function createAlerts(vitalSigns, patientId) {
     try {
         const patient = await Patients.findByPk(patientId);
@@ -40,7 +39,6 @@ async function createAlerts(vitalSigns, patientId) {
         var alertCount = 0;
         var alerts = {
             PatientId: patientId,
-            hospitalId: vitalSigns.hospitalId
         };
         const { heartRate, respiratoryRate, supplemented_O2, O2saturation, temperature, systolicBP, diastolicBP } = vitalSigns;
 
@@ -212,7 +210,6 @@ async function getVitalSigns(patientId) {
 
                 return {
                     id: vitals.id,
-                    hospitalId: vitals.hospitalId,
                     heartRate: vitals.heartRate,
                     respiratoryRate: vitals.respiratoryRate,
                     supplementedO2: vitals.supplemented_O2,

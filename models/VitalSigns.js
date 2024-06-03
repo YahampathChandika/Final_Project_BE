@@ -1,9 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
     const VitalSigns = sequelize.define("VitalSigns", {
-      hospitalId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       heartRate: {
         type: DataTypes.INTEGER,
         allowNull: true,
