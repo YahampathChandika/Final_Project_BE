@@ -145,6 +145,7 @@ async function getPatientById(req, res) {
         const vitalSigns = await vitalService.getVitalSigns(id);
         const alerts = await vitalService.getAlerts(id);
 
+
         var response = {
             patient: result.payload,
             vitalSigns: vitalSigns.payload,

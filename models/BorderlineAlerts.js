@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Alerts = sequelize.define("Alerts", {
+    const BorderlineAlerts = sequelize.define("BorderlineAlerts", {
       heartRate: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -33,6 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       }
     });
-    return Alerts;
+    return BorderlineAlerts;
 
   };

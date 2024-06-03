@@ -30,8 +30,11 @@ try {
     db.Admissions.belongsTo(db.Beds, {as: "bed", foreignKey: "bedId"});
     db.Beds.hasMany(db.Admissions, {as: "admissions", foreignKey: "bedId"});
 
-    db.Alerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
-    db.Patients.hasMany(db.Alerts, { as: "alerts", foreignKey: "PatientId"});
+    db.CriticalAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.CriticalAlerts, { as: "alerts", foreignKey: "PatientId"});
+
+    db.BorderlineAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.BorderlineAlerts, { as: "alerts", foreignKey: "PatientId"});
 
 } catch (error) {
     console.log(error);
