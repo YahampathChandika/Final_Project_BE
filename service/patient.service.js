@@ -214,12 +214,12 @@ async function getPatientById(id) {
         const admittedDate = patient?.createdAt?.toISOString().split('T')[0]
         
         const patientObj = {
-            id: patient.id,
-            hospitalId: patient.hospitalId,
-            firstName: patient.firstName,
-            lastName: patient.lastName,
-            gender: patient.gender,
-            dateOfBirth: birthday,
+            id: patient?.id || null,
+            hospitalId: patient?.hospitalId || null,
+            firstName: patient?.firstName || null,
+            lastName: patient?.lastName,
+            gender: patient?.gender,
+            dateOfBirth: birthday || null,
             contactNo: patient.contactNo,
             address: patient.address,
             nic: patient.nic,
@@ -230,7 +230,7 @@ async function getPatientById(id) {
             guardianAddress: patient.guardianAddress,
             status: patient.status,
             createdAt: admittedDate,
-            diagnosis: patient.admissions[patient.admissions.length-1].diagnosis
+            diagnosis: patient.admissions[patient.admissions.length-1]?.diagnosis
         }    
         return {
             error: false,

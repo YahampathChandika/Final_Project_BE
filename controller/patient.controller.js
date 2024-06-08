@@ -144,12 +144,14 @@ async function getPatientById(req, res) {
         const result = await patientService.getPatientById(id);
         const vitalSigns = await vitalService.getVitalSigns(id);
         const alerts = await vitalService.getAlerts(id);
+        const condition = await vitalService.getCondition(id);
 
 
         var response = {
             patient: result.payload,
             vitalSigns: vitalSigns.payload,
-            alerts: alerts.payload
+            alerts: alerts.payload,
+            condition: condition.payload
         }
 
 

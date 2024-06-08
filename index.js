@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const dotEnv = require("dotenv")
 
+
 dotEnv.config()
 
 const PORT = process.env.PORT || 4000;
@@ -30,11 +31,16 @@ try {
     db.Admissions.belongsTo(db.Beds, {as: "bed", foreignKey: "bedId"});
     db.Beds.hasMany(db.Admissions, {as: "admissions", foreignKey: "bedId"});
 
+    db.Conditions.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.Conditions, { as: "conditions", foreignKey: "PatientId"});
+
     db.CriticalAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
     db.Patients.hasMany(db.CriticalAlerts, { as: "alerts", foreignKey: "PatientId"});
 
     db.BorderlineAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
     db.Patients.hasMany(db.BorderlineAlerts, { as: "alerts", foreignKey: "PatientId"});
+
+    
 
 } catch (error) {
     console.log(error);

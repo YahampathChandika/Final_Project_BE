@@ -1,5 +1,5 @@
 const { where } = require("sequelize");
-const { VitalSigns, Patients, CriticalAlerts, BorderlineAlerts } = require("../models");
+const { VitalSigns, Patients, CriticalAlerts, BorderlineAlerts, Conditions } = require("../models");
 const { text } = require("express");
 
 //Add Vital Signs
@@ -59,7 +59,7 @@ async function createAlerts(vitalSigns, patientId) {
         // Heart Rate ----------------------->
         if (heartRate < 50 || heartRate > 110) {
             console.log("hehehe", heartRate)
-            score += 2;
+            score += 3;
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (heartRate < 60): {
@@ -189,7 +189,7 @@ async function createAlerts(vitalSigns, patientId) {
 
         // Blood Pressure (Diastolic)
         if (diastolicBP < 60 || diastolicBP > 90) {
-            score += 2;
+            score += 3;
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (diastolicBP < 60): {
@@ -213,7 +213,7 @@ async function createAlerts(vitalSigns, patientId) {
 
         // Temperature (Fahrenheit)
         if (temperature < 95.0 || temperature > 100.4) {
-            score += 2;
+            score += 3;
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (temperature < 95): {
@@ -290,6 +290,30 @@ async function createAlerts(vitalSigns, patientId) {
             condition =  "Unstable";
         } else {
             condition = "Critical";
+        }
+
+        console.log(condition, score)
+
+        condition = {
+            PatientId: patientId,
+            condition: condition
+        }
+
+        // Find existing borderline alert or create a new one
+        const [Condition, created] = await Conditions.findOrCreate({
+            where: {
+                PatientId: patientId
+            },
+            defaults: condition
+        });
+
+        if (!created) {
+            // Update the existing borderline alert
+            await Conditions.update(condition, {
+                where: {
+                    PatientId: patientId
+                }
+            });
         }
 
         return {
@@ -387,26 +411,27 @@ async function getAlerts(patientId) {
 
         let ac = criticalAlerts[0]?.alertCount + borderlineAlerts[0]?.alertCount
 
-        Object.keys(criticalAlerts[0].dataValues).forEach(e => {
-            if(criticalAlerts[0].dataValues[e] == null ) {
-                delete criticalAlerts[0].dataValues[e]
+
+        Object.keys(criticalAlerts[0]?.dataValues).forEach(e => {
+            if(criticalAlerts[0]?.dataValues[e] == null ) {
+                delete criticalAlerts[0]?.dataValues[e]
             } else {
                 if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
                     criticalAlerts[0].dataValues[e] = {
-                        text: criticalAlerts[0].dataValues[e],
+                        text: criticalAlerts[0]?.dataValues[e],
                         value: vitalSigns[e]
                     }
                 } else {
-                    delete criticalAlerts[0].dataValues[e]
+                    delete criticalAlerts[0]?.dataValues[e]
                 }  
             }
         })
 
         
 
-        Object.keys(borderlineAlerts[0].dataValues).forEach(e => {
-            if(borderlineAlerts[0].dataValues[e] == null) {
-                delete borderlineAlerts[0].dataValues[e]
+        Object.keys(borderlineAlerts[0]?.dataValues).forEach(e => {
+            if(borderlineAlerts[0]?.dataValues[e] == null) {
+                delete borderlineAlerts[0]?.dataValues[e]
             } else {
                 if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
                     borderlineAlerts[0].dataValues[e] = {
@@ -414,15 +439,15 @@ async function getAlerts(patientId) {
                         value: vitalSigns[e]
                     }
                 } else {
-                    delete borderlineAlerts[0].dataValues[e]
+                    delete borderlineAlerts[0]?.dataValues[e]
                 }  
             }
         })
 
         let alerts = {
-            criticalAlerts: criticalAlerts,
-            borderlineAlerts: borderlineAlerts,
-            totalAlertCount: ac,
+            criticalAlerts: criticalAlerts || "N/A",
+            borderlineAlerts: borderlineAlerts || "N/A",
+            totalAlertCount: ac || "N/A",
         }
 
 
@@ -441,6 +466,7 @@ async function getAlerts(patientId) {
         }
 
     } catch (error) {
+        console.log(error)
         throw error;
     }
 }
@@ -470,6 +496,35 @@ async function editVitalSigns(id, vitals) {
     }
 }
 
+async function getCondition(patientId) {
+    try {
+        const condition = await Conditions.findOne({
+            where: {
+                PatientId: patientId
+            }
+        });
+
+
+        if(!condition) {
+            return {
+                error: true,
+                status: 404,
+                payload: "N/A"
+            }
+        }
+        
+        return {
+            error: false,
+            status: 200,
+            payload: condition.condition
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
 
 
 module.exports = {
@@ -477,5 +532,6 @@ module.exports = {
     getVitalSigns,
     editVitalSigns,
     createAlerts,
-    getAlerts
+    getAlerts,
+    getCondition
 }
