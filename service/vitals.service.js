@@ -422,10 +422,15 @@ async function getAlerts(patientId) {
 
         let ac = criticalAlerts[0]?.alertCount + borderlineAlerts[0]?.alertCount
 
+        if(vitalSigns == null) {
+            ac = 0
+        }
+
         var criticalAlertsList = [];
         var borderlineAlertsList = [];
 
-        if(criticalAlerts.length > 0) {
+        if(criticalAlerts.length > 0 && vitalSigns != null) {
+            console.log("asdasd")
             // Removing the vitals that do not have alerts from the alerts objects
             Object.keys(criticalAlerts[0]?.dataValues)?.forEach(e => {
                 if(criticalAlerts[0]?.dataValues[e] == null ) {
@@ -452,7 +457,7 @@ async function getAlerts(patientId) {
             })
         }
         
-        if(borderlineAlerts.length > 0) {
+        if(borderlineAlerts.length > 0 && vitalSigns != null) {
             // Removing the vitals that do not have alerts from the alerts objects
             Object.keys(borderlineAlerts[0]?.dataValues)?.forEach(e => {
                 if(borderlineAlerts[0]?.dataValues[e] == null) {
