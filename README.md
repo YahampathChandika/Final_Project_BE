@@ -7,4 +7,4 @@ Create a folder named images in the project directory. Then create a sub folder 
 Run the seeder file first to insert data values to the ReferenceNumbers table. 
 To do that type the following command on the terminal.
 
-Command : sequelize db:seed:all  
+Command : sequelize db:seed:all 
