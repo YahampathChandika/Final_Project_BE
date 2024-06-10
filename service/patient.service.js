@@ -266,15 +266,19 @@ async function getAdmittedPatients(){
               }, {
                 model: BorderlineAlerts,
                 as: "borderlineAlerts"
-              }
-            ]
-              
-            
+              }]
           });
+        
+        const admittedPatientsCount = admittedPatientList.length
+        var criticalPatientCount = 0;
+        var unstablePatientCount = 0;
 
         const patientList = admittedPatientList.map((patient,index) => {
             const birthday = patient?.dateOfBirth?.toISOString()?.split('T')[0]
             const admittedDate = patient?.createdAt?.toISOString().split('T')[0]
+
+            if(patient?.conditions[0]?.condition == "Critical") { criticalPatientCount++ }
+            if(patient?.conditions[0]?.condition == "Unstable") { unstablePatientCount++ }
             return {
                 id: patient.id,
                 hospitalId: patient.hospitalId,
@@ -298,7 +302,15 @@ async function getAdmittedPatients(){
                 condition: patient?.conditions[0]?.condition || "N/A"
             }
         })
-        return patientList;
+
+        var response = {
+            totalPatients: admittedPatientsCount,
+            stablePatients: admittedPatientsCount - criticalPatientCount - unstablePatientCount,
+            criticalPatients: criticalPatientCount,
+            unstablePatients: unstablePatientCount,
+            patientsList: patientList
+        }
+        return response;
     } catch (error) {
         console.log(error)
         throw error;
