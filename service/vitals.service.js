@@ -343,7 +343,7 @@ async function getVitalSigns(patientId) {
         }else {
             const vitalSigns = await VitalSigns.findAll({
                 where: {
-                    patientId: patientId
+                    PatientId: patientId
                 }
             })
 
@@ -414,7 +414,10 @@ async function getAlerts(patientId) {
         })
 
         const vitalSigns = await VitalSigns.findOne({
-            order: [['id', 'DESC']]
+            order: [['id', 'DESC']],
+            where: {
+                PatientId: patientId
+            }
         })
 
         let ac = criticalAlerts[0]?.alertCount + borderlineAlerts[0]?.alertCount
