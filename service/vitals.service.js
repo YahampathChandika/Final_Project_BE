@@ -38,7 +38,7 @@ async function createAlerts(vitalSigns, patientId) {
                 temperature: null,
                 systolicBP: null,
                 diastolicBP: null,
-                alertCount: null,
+                alertCount: 0,
                 PatientId: patientId
             },
             borderline: {
@@ -49,7 +49,7 @@ async function createAlerts(vitalSigns, patientId) {
                 temperature: null,
                 systolicBP: null,
                 diastolicBP: null,
-                alertCount: null,
+                alertCount: 0,
                 PatientId: patientId
             }
         }
@@ -232,11 +232,11 @@ async function createAlerts(vitalSigns, patientId) {
             score += 1;
             alerts.borderline.alertCount += 1
             switch (true) {
-                case (temperature < 95): {
+                case (temperature <= 97.5): {
                     alerts.borderline.temperature = "Hypothermia";
                     break;
                 }
-                case (temperature > 100.4): {
+                case (temperature >= 99.5): {
                     alerts.borderline.temperature = "Fever";
                     break;
                 }
@@ -280,8 +280,8 @@ async function createAlerts(vitalSigns, patientId) {
             });
         }
 
-        console.log("critical - ",alerts.critical.alertCount)
-        console.log("bord - ",alerts.borderline.alertCount)
+        // console.log("critical - ",alerts.critical.alertCount)
+        // console.log("bord - ",alerts.borderline.alertCount)
 
         // Determine category
         if (score === 0) {
@@ -411,8 +411,8 @@ async function getAlerts(patientId) {
 
         let ac = criticalAlerts[0]?.alertCount + borderlineAlerts[0]?.alertCount
 
-
-        Object.keys(criticalAlerts[0]?.dataValues).forEach(e => {
+        // Removing the vitals that do not have alerts from the alerts objects
+        Object.keys(criticalAlerts[0]?.dataValues)?.forEach(e => {
             if(criticalAlerts[0]?.dataValues[e] == null ) {
                 delete criticalAlerts[0]?.dataValues[e]
             } else {
@@ -427,9 +427,7 @@ async function getAlerts(patientId) {
             }
         })
 
-        
-
-        Object.keys(borderlineAlerts[0]?.dataValues).forEach(e => {
+        Object.keys(borderlineAlerts[0]?.dataValues)?.forEach(e => {
             if(borderlineAlerts[0]?.dataValues[e] == null) {
                 delete borderlineAlerts[0]?.dataValues[e]
             } else {
@@ -444,9 +442,31 @@ async function getAlerts(patientId) {
             }
         })
 
+        // Formatting the critical alerts list and borderline alert lists  
+        var criticalAlertsList = []
+        var borderlineAlertsList = []
+
+        Object.keys(criticalAlerts[0].dataValues)?.forEach((e) => {
+            var x = {
+                name: e,
+                text: criticalAlerts[0][e].text,
+                value: criticalAlerts[0][e].value
+            }
+            criticalAlertsList.push(x)
+        })
+
+        Object.keys(borderlineAlerts[0].dataValues)?.forEach((e) => {
+            var x = {
+                name: e,
+                text: borderlineAlerts[0][e].text,
+                value: borderlineAlerts[0][e].value
+            }
+            borderlineAlertsList.push(x)
+        })
+
         let alerts = {
-            criticalAlerts: criticalAlerts || "N/A",
-            borderlineAlerts: borderlineAlerts || "N/A",
+            criticalAlerts: criticalAlertsList || "N/A",
+            borderlineAlerts: borderlineAlertsList || "N/A",
             totalAlertCount: ac || "N/A",
         }
 
