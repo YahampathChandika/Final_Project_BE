@@ -347,6 +347,14 @@ async function getVitalSigns(patientId) {
                 }
             })
 
+            if(!vitalSigns) {
+                return {
+                    error: false,
+                    status: 404,
+                    payload: []
+                }
+            }
+
             const vitalSignsList = vitalSigns.map((vitals, index) => {
                 const off = vitals.updatedAt.getTimezoneOffset() * 60000
                 var newdt = new Date(vitals.updatedAt - off).toISOString()
@@ -411,58 +419,62 @@ async function getAlerts(patientId) {
 
         let ac = criticalAlerts[0]?.alertCount + borderlineAlerts[0]?.alertCount
 
-        // Removing the vitals that do not have alerts from the alerts objects
-        Object.keys(criticalAlerts[0]?.dataValues)?.forEach(e => {
-            if(criticalAlerts[0]?.dataValues[e] == null ) {
-                delete criticalAlerts[0]?.dataValues[e]
-            } else {
-                if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
-                    criticalAlerts[0].dataValues[e] = {
-                        text: criticalAlerts[0]?.dataValues[e],
-                        value: vitalSigns[e]
-                    }
-                } else {
+        var criticalAlertsList = [];
+        var borderlineAlertsList = [];
+
+        if(criticalAlerts.length > 0) {
+            // Removing the vitals that do not have alerts from the alerts objects
+            Object.keys(criticalAlerts[0]?.dataValues)?.forEach(e => {
+                if(criticalAlerts[0]?.dataValues[e] == null ) {
                     delete criticalAlerts[0]?.dataValues[e]
-                }  
-            }
-        })
-
-        Object.keys(borderlineAlerts[0]?.dataValues)?.forEach(e => {
-            if(borderlineAlerts[0]?.dataValues[e] == null) {
-                delete borderlineAlerts[0]?.dataValues[e]
-            } else {
-                if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
-                    borderlineAlerts[0].dataValues[e] = {
-                        text: borderlineAlerts[0].dataValues[e],
-                        value: vitalSigns[e]
-                    }
                 } else {
+                    if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
+                        criticalAlerts[0].dataValues[e] = {
+                            text: criticalAlerts[0]?.dataValues[e],
+                            value: vitalSigns[e]
+                        }
+                    } else {
+                        delete criticalAlerts[0]?.dataValues[e]
+                    }  
+                }
+            })
+
+            Object.keys(criticalAlerts[0].dataValues)?.forEach((e) => {
+                var x = {
+                    name: e,
+                    text: criticalAlerts[0][e].text,
+                    value: criticalAlerts[0][e].value
+                }
+                criticalAlertsList.push(x)
+            })
+        }
+        
+        if(borderlineAlerts.length > 0) {
+            // Removing the vitals that do not have alerts from the alerts objects
+            Object.keys(borderlineAlerts[0]?.dataValues)?.forEach(e => {
+                if(borderlineAlerts[0]?.dataValues[e] == null) {
                     delete borderlineAlerts[0]?.dataValues[e]
-                }  
-            }
-        })
+                } else {
+                    if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
+                        borderlineAlerts[0].dataValues[e] = {
+                            text: borderlineAlerts[0].dataValues[e],
+                            value: vitalSigns[e]
+                        }
+                    } else {
+                        delete borderlineAlerts[0]?.dataValues[e]
+                    }  
+                }
+            })
 
-        // Formatting the critical alerts list and borderline alert lists  
-        var criticalAlertsList = []
-        var borderlineAlertsList = []
-
-        Object.keys(criticalAlerts[0].dataValues)?.forEach((e) => {
-            var x = {
-                name: e,
-                text: criticalAlerts[0][e].text,
-                value: criticalAlerts[0][e].value
-            }
-            criticalAlertsList.push(x)
-        })
-
-        Object.keys(borderlineAlerts[0].dataValues)?.forEach((e) => {
-            var x = {
-                name: e,
-                text: borderlineAlerts[0][e].text,
-                value: borderlineAlerts[0][e].value
-            }
-            borderlineAlertsList.push(x)
-        })
+            Object.keys(borderlineAlerts[0].dataValues)?.forEach((e) => {
+                var x = {
+                    name: e,
+                    text: borderlineAlerts[0][e].text,
+                    value: borderlineAlerts[0][e].value
+                }
+                borderlineAlertsList.push(x)
+            })
+        }
 
         let alerts = {
             criticalAlerts: criticalAlertsList || "N/A",
@@ -527,7 +539,7 @@ async function getCondition(patientId) {
 
         if(!condition) {
             return {
-                error: true,
+                error: false,
                 status: 404,
                 payload: "N/A"
             }
