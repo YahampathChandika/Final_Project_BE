@@ -141,11 +141,40 @@ async function getPatientById(req, res) {
             return res.status(403).json({ error: true, payload: "Unauthorized. Only Admins, Doctors and Nurses can view patient details." });
         }
         
+        // Get patient bio data
         const result = await patientService.getPatientById(id);
+        if(result.error) {
+            return res.status(result.status).json ({
+                error: true,
+                payload: result.payload
+            })
+        }
+        
+        // get patient vital signs
         const vitalSigns = await vitalService.getVitalSigns(id);
-        const alerts = await vitalService.getAlerts(id);
-        const condition = await vitalService.getCondition(id);
+        if(vitalSigns.error) {
+            return res.status(vitalSigns.status).json ({
+                error: true,
+                payload: vitalSigns.payload
+            })
+        }
 
+        // get the alerts of the patient
+        const alerts = await vitalService.getAlerts(id);
+        if(alerts.error) {
+            return res.status(alerts.status).json ({
+                error: true,
+                payload: alerts.payload
+            })
+        }
+
+        const condition = await vitalService.getCondition(id);
+        if(condition.error) {
+            return res.status(condition.status).json ({
+                error: true,
+                payload: condition.payload
+            })
+        }
 
         var response = {
             patient: result.payload,
