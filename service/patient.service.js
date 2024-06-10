@@ -1,6 +1,6 @@
 const { Sequelize, where } = require("sequelize");
 const db = require("../models");
-const { Patients, Admissions, Beds, ReferenceNumbers } = require("../models");
+const { Patients, Admissions, Beds, ReferenceNumbers, CriticalAlerts, BorderlineAlerts, Conditions } = require("../models");
 
 //Register a patient.
 async function registerPatient(patient) {
@@ -250,14 +250,24 @@ async function getAdmittedPatients(){
             where: {
                 status: "Admitted"
             },
-            include: {
+            include: [{
                 model : db.Admissions,
                 as: 'admissions',
-                attributes: ['diagnosis'],
+                attributes: ['diagnosis','bedId'],
                 where: {
                     dischargedOn: null
                 }
+              }, {
+                model: Conditions,
+                as: "conditions"
+              }, {
+                model: CriticalAlerts,
+                as: "criticalAlerts"
+              }, {
+                model: BorderlineAlerts,
+                as: "borderlineAlerts"
               }
+            ]
               
             
           });
@@ -271,6 +281,7 @@ async function getAdmittedPatients(){
                 firstName: patient.firstName,
                 lastName: patient.lastName,
                 dateOfBirth: birthday,
+                gender: patient.gender,
                 contactNo: patient.contactNo,
                 address: patient.address,
                 nic: patient.nic,
@@ -280,8 +291,11 @@ async function getAdmittedPatients(){
                 guardianContactNo: patient.guardianContactNo,
                 guardianAddress: patient.guardianAddress,
                 status: patient.status,
+                bedNo: patient?.admissions[patient.admissions.length-1]?.bedId || "N/A",
                 createdAt: admittedDate,
-                diagnosis: patient.admissions[patient.admissions.length-1].diagnosis
+                diagnosis: patient.admissions[patient.admissions.length-1].diagnosis,
+                alertCount: patient?.criticalAlerts[0]?.alertCount + patient?.borderlineAlerts[0]?.alertCount || "N/A",
+                condition: patient?.conditions[0]?.condition || "N/A"
             }
         })
         return patientList;
@@ -367,13 +381,31 @@ async function dischargePatient(patientId) {
             await patientObj.update({status: "Discharged",});
             await Beds.update({available: true}, {where: {id: patientObj.admissions[0].bedId}})
             await Admissions.update({dischargedOn: Sequelize.literal('CURRENT_TIMESTAMP')}, {where: {id: patientObj.admissions[0].id}})
+
+            await CriticalAlerts.destroy({
+                where: {
+                    PatientId: patientId
+                }
+            })
+
+            await BorderlineAlerts.destroy({
+                where: {
+                    PatientId: patientId
+                }
+            })
+
+            await Conditions.destroy({
+                where: {
+                    PatientId: patientId
+                }
+            })
             return {
                 error: false,
                 payload: "Patient Discharged Succesfully"
             }
         }
     } catch (error) {
-        console.log(error)
+        console.log("Error discharging patient service: ",error)
         throw error;
     }
 }

@@ -35,10 +35,10 @@ try {
     db.Patients.hasMany(db.Conditions, { as: "conditions", foreignKey: "PatientId"});
 
     db.CriticalAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
-    db.Patients.hasMany(db.CriticalAlerts, { as: "alerts", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.CriticalAlerts, { as: "criticalAlerts", foreignKey: "PatientId"});
 
     db.BorderlineAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
-    db.Patients.hasMany(db.BorderlineAlerts, { as: "alerts", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.BorderlineAlerts, { as: "borderlineAlerts", foreignKey: "PatientId"});
 
     
 
