@@ -58,16 +58,15 @@ async function createAlerts(vitalSigns, patientId) {
 
         // Heart Rate ----------------------->
         if (heartRate < 50 || heartRate > 110) {
-            console.log("hehehe", heartRate)
             score += 3;
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (heartRate < 60): {
-                    alerts.critical.heartRate = "Bradycardia";
+                    alerts.critical.heartRate = "Bradycardia low Heart Rate";
                     break;
                 }
                 case (heartRate > 100): {
-                    alerts.critical.heartRate = "Tachycardia";
+                    alerts.critical.heartRate = "Tachycardia high Heart Rate";
                     break;
                 }
                 default: {
@@ -75,16 +74,15 @@ async function createAlerts(vitalSigns, patientId) {
                 }
             }
         } else if ((heartRate >= 50 && heartRate <= 59) || (heartRate >= 101 && heartRate <= 110)) {
-            console.log("huhuhu", heartRate)
             score += 1;
             alerts.borderline.alertCount += 1
             switch (true) {
                 case (heartRate < 60): {
-                    alerts.borderline.heartRate = "Bradycardia";
+                    alerts.borderline.heartRate = "Bradycardia low Heart Rate";
                     break;
                 }
                 case (heartRate > 100): {
-                    alerts.borderline.heartRate = "Tachycardia";
+                    alerts.borderline.heartRate = "Tachycardia high Heart Rate";
                     break;
                 }
                 default: {
@@ -99,11 +97,11 @@ async function createAlerts(vitalSigns, patientId) {
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (respiratoryRate < 12): {
-                    alerts.critical.respiratoryRate = "Bradypnea";
+                    alerts.critical.respiratoryRate = "Bradypnea low Respiratory Rate";
                     break;
                 }
                 case (respiratoryRate > 20): {             
-                    alerts.critical.respiratoryRate = "Tachypnea";
+                    alerts.critical.respiratoryRate = "Tachypnea high Respiratory Rate";
                     break;
                 }
                 default: {
@@ -115,11 +113,11 @@ async function createAlerts(vitalSigns, patientId) {
             alerts.borderline.alertCount += 1
             switch (true) {
                 case (respiratoryRate < 12): {
-                    alerts.borderline.respiratoryRate = "Bradypnea";
+                    alerts.borderline.respiratoryRate = "Bradypnea low Respiratory Rate";
                     break;
                 }
                 case (respiratoryRate > 20): {             
-                    alerts.borderline.respiratoryRate = "Tachypnea";
+                    alerts.borderline.respiratoryRate = "Tachypnea high Respiratory Rate";
                     break;
                 }
                 default: {
@@ -131,25 +129,25 @@ async function createAlerts(vitalSigns, patientId) {
         // Supplemental O2 -------------------------->
         if (supplemented_O2 > 8) {
             score += 3;
-            alerts.critical.supplemented_O2 = "Hypoxemia";
+            alerts.critical.supplemented_O2 = "Hypoxemia high Supplimental O2";
             alerts.critical.alertCount += 1;
         }
         else if (supplemented_O2 >= 5 && supplemented_O2 <= 8) {
             score += 1;
             alerts.borderline.alertCount += 1;
-            alerts.borderline.supplemented_O2 = "Hypoxemia";
+            alerts.borderline.supplemented_O2 = "Hypoxemia high Supplimental O2";
         }
 
         // Saturation O2 ---------------------------->
         if (O2saturation < 90) {
             score += 3;
             alerts.critical.alertCount += 1;
-            alerts.critical.O2saturation = "Hypoxemia";
+            alerts.critical.O2saturation = "Hypoxemia low O2 Saturation";
 
         } else if (O2saturation >= 90 && O2saturation <= 94) {
             score += 1;
             alerts.borderline.alertCount += 1
-            alerts.borderline.O2saturation = "Hypoxemia";
+            alerts.borderline.O2saturation = "Hypoxemia low O2 Saturation";
         }
 
         // Blood Pressure (Systolic) ---------------------------->
@@ -158,11 +156,11 @@ async function createAlerts(vitalSigns, patientId) {
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (systolicBP < 90): {
-                    alerts.critical.systolicBP = "Hypotension";
+                    alerts.critical.systolicBP = "Hypotension low Systolic BP";
                     break;
                 }
                 case (systolicBP > 120): {
-                    alerts.critical.systolicBP = "Hypertension";
+                    alerts.critical.systolicBP = "Hypertension high Systolic BP";
                     break;
                 }
                 default: {
@@ -172,19 +170,7 @@ async function createAlerts(vitalSigns, patientId) {
         } else if (systolicBP >= 121 && systolicBP <= 140) {
             score += 1;
             alerts.borderline.alertCount += 1
-            switch (true) {
-                case (systolicBP < 90): {
-                    alerts.borderline.systolicBP = "Hypotension";
-                    break;
-                }
-                case (systolicBP > 120): {
-                    alerts.borderline.systolicBP = "Hypertension";
-                    break;
-                }
-                default: {
-                    // alerts.systolicBP = null;
-                }
-            }
+            alerts.borderline.systolicBP = "Hypertension high Systolic BP";
         }
 
         // Blood Pressure (Diastolic)
@@ -193,11 +179,11 @@ async function createAlerts(vitalSigns, patientId) {
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (diastolicBP < 60): {
-                    alerts.critical.diastolicBP = "Hypotension";
+                    alerts.critical.diastolicBP = "Hypotension low Diastolic BP";
                     break;
                 }
-                case (diastolicBP > 80): {
-                    alerts.critical.diastolicBP = "Hypertension";
+                case (diastolicBP > 90): {
+                    alerts.critical.diastolicBP = "Hypertension high Diastolic BP";
                     break;
                 }
                 default: {
@@ -208,7 +194,7 @@ async function createAlerts(vitalSigns, patientId) {
         } else if (diastolicBP >= 81 && diastolicBP <= 90) {
             score += 1;
             alerts.borderline.alertCount += 1
-            alerts.borderline.diastolicBP = "Hypertension";
+            alerts.borderline.diastolicBP = "Hypertension high Diastolic BP";
         }
 
         // Temperature (Fahrenheit)
@@ -217,11 +203,11 @@ async function createAlerts(vitalSigns, patientId) {
             alerts.critical.alertCount += 1;
             switch (true) {
                 case (temperature < 95): {
-                    alerts.critical.temperature = "Hypothermia";
+                    alerts.critical.temperature = "Hypothermia low Temperature";
                     break;
                 }
                 case (temperature > 100.4): {
-                    alerts.critical.temperature = "Fever";
+                    alerts.critical.temperature = "Fever high Temperature";
                     break;
                 }
                 default: {
@@ -233,11 +219,11 @@ async function createAlerts(vitalSigns, patientId) {
             alerts.borderline.alertCount += 1
             switch (true) {
                 case (temperature <= 97.5): {
-                    alerts.borderline.temperature = "Hypothermia";
+                    alerts.borderline.temperature = "Hypothermia low Temperature";
                     break;
                 }
                 case (temperature >= 99.5): {
-                    alerts.borderline.temperature = "Fever";
+                    alerts.borderline.temperature = "Fever high Temperature";
                     break;
                 }
                 default: {
@@ -437,23 +423,17 @@ async function getAlerts(patientId) {
                     delete criticalAlerts[0]?.dataValues[e]
                 } else {
                     if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
+                        var splitValues = criticalAlerts[0].dataValues[e].split(" ")
                         criticalAlerts[0].dataValues[e] = {
-                            text: criticalAlerts[0]?.dataValues[e],
-                            value: vitalSigns[e]
+                            name: splitValues[2] + " " + (splitValues[3] || ""),
+                            text: splitValues[0],
+                            value: vitalSigns[e],
+                            status: splitValues[1]
                         }
                     } else {
                         delete criticalAlerts[0]?.dataValues[e]
                     }  
                 }
-            })
-
-            Object.keys(criticalAlerts[0].dataValues)?.forEach((e) => {
-                var x = {
-                    name: e,
-                    text: criticalAlerts[0][e].text,
-                    value: criticalAlerts[0][e].value
-                }
-                criticalAlertsList.push(x)
             })
         }
         
@@ -464,29 +444,23 @@ async function getAlerts(patientId) {
                     delete borderlineAlerts[0]?.dataValues[e]
                 } else {
                     if(!["id", "alertCount", "createdAt", "updatedAt", "PatientId"].includes(e)) {
+                        var splitValues = borderlineAlerts[0].dataValues[e].split(" ")
                         borderlineAlerts[0].dataValues[e] = {
-                            text: borderlineAlerts[0].dataValues[e],
-                            value: vitalSigns[e]
+                            name: splitValues[2] + " " + (splitValues[3] || ""),
+                            text: splitValues[0],
+                            value: vitalSigns[e],
+                            status: splitValues[1]
                         }
                     } else {
                         delete borderlineAlerts[0]?.dataValues[e]
                     }  
                 }
             })
-
-            Object.keys(borderlineAlerts[0].dataValues)?.forEach((e) => {
-                var x = {
-                    name: e,
-                    text: borderlineAlerts[0][e].text,
-                    value: borderlineAlerts[0][e].value
-                }
-                borderlineAlertsList.push(x)
-            })
         }
 
         let alerts = {
-            criticalAlerts: criticalAlertsList || "N/A",
-            borderlineAlerts: borderlineAlertsList || "N/A",
+            criticalAlerts: criticalAlerts || "N/A",
+            borderlineAlerts: borderlineAlerts || "N/A",
             totalAlertCount: ac || "N/A",
         }
 
