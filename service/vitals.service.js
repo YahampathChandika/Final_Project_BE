@@ -333,6 +333,7 @@ async function oldcreateAlerts(vitalSigns, patientId) {
   }
 }
 
+//Create Alerts Using NEWS
 async function createAlerts(vitalSigns, patientId) {
   try {
     // Define alerts structure
@@ -369,7 +370,7 @@ async function createAlerts(vitalSigns, patientId) {
       temperature,
       systolicBP,
       diastolicBP,
-      consciousness,
+      avpuScore,
     } = vitalSigns;
 
     // Part 1: Identify Borderline and Critical Alerts
@@ -580,91 +581,108 @@ async function createAlerts(vitalSigns, patientId) {
     let score = 0;
 
     // Respiratory Rate (breaths per minute) for NEWS2 score
-    if (respiratoryRate >= 25) {
-      score += 3;
-    } else if (respiratoryRate >= 21) {
-      score += 2;
-    } else if (respiratoryRate >= 12) {
-      score += 0;
-    } else if (respiratoryRate >= 9) {
-      score += 1;
-    } else {
-      score += 3;
+    if (respiratoryRate !== null) {
+      if (respiratoryRate >= 25) {
+        score += 3;
+      } else if (respiratoryRate >= 21) {
+        score += 2;
+      } else if (respiratoryRate >= 12) {
+        score += 0;
+      } else if (respiratoryRate >= 9) {
+        score += 1;
+      } else {
+        score += 3;
+      }
     }
 
     // Oxygen Saturation for NEWS2 score
-    if (O2saturation <= 91) {
-      score += 3;
-    } else if (O2saturation <= 93) {
-      score += 2;
-    } else if (O2saturation <= 95) {
-      score += 1;
-    } else {
-      score += 0;
+    if (O2saturation !== null) {
+      if (O2saturation <= 91) {
+        score += 3;
+      } else if (O2saturation <= 93) {
+        score += 2;
+      } else if (O2saturation <= 95) {
+        score += 1;
+      } else {
+        score += 0;
+      }
     }
 
     // Supplemental O2 for NEWS2 score
-    if (supplemented_O2 > 0) {
-      score += 2;
-    } else {
-      score += 0;
+    if (supplemented_O2 !== null) {
+      if (supplemented_O2 > 0) {
+        score += 2;
+      } else {
+        score += 0;
+      }
     }
 
     // Temperature for NEWS2 score
-    if (temperature <= 95.0) {
-      score += 3;
-    } else if (temperature <= 96.8) {
-      score += 1;
-    } else if (temperature <= 100.4) {
-      score += 0;
-    } else if (temperature <= 102.2) {
-      score += 1;
-    } else {
-      score += 2;
+    if (temperature !== null) {
+      if (temperature <= 95.0) {
+        score += 3;
+      } else if (temperature <= 96.8) {
+        score += 1;
+      } else if (temperature <= 100.4) {
+        score += 0;
+      } else if (temperature <= 102.2) {
+        score += 1;
+      } else {
+        score += 2;
+      }
     }
 
     // Systolic Blood Pressure (mmHg) for NEWS2 score
-    if (systolicBP <= 90) {
-      score += 3;
-    } else if (systolicBP <= 100) {
-      score += 2;
-    } else if (systolicBP <= 110) {
-      score += 1;
-    } else if (systolicBP <= 219) {
-      score += 0;
-    } else {
-      score += 3;
+    if (systolicBP !== null) {
+      if (systolicBP <= 90) {
+        score += 3;
+      } else if (systolicBP <= 100) {
+        score += 2;
+      } else if (systolicBP <= 110) {
+        score += 1;
+      } else if (systolicBP <= 219) {
+        score += 0;
+      } else {
+        score += 3;
+      }
     }
 
     // Heart Rate (beats per minute) for NEWS2 score
-    if (heartRate <= 40) {
-      score += 3;
-    } else if (heartRate <= 50) {
-      score += 1;
-    } else if (heartRate <= 90) {
-      score += 0;
-    } else if (heartRate <= 110) {
-      score += 1;
-    } else if (heartRate <= 130) {
-      score += 2;
-    } else {
-      score += 3;
+    if (heartRate !== null) {
+      if (heartRate <= 40) {
+        score += 3;
+      } else if (heartRate <= 50) {
+        score += 1;
+      } else if (heartRate <= 90) {
+        score += 0;
+      } else if (heartRate <= 110) {
+        score += 1;
+      } else if (heartRate <= 130) {
+        score += 2;
+      } else {
+        score += 3;
+      }
     }
 
     // Level of Consciousness for NEWS2 score
-    if (consciousness === "Alert") {
-      score += 0;
-    } else {
-      score += 3;
+    if (avpuScore !== null) {
+      if (avpuScore === "Alert") {
+        score += 0;
+      } else {
+        score += 3;
+      }
     }
 
     // Determine frequency and response based on NEW Score
     let frequency;
     let response;
 
-    if (score >= 0 && score <= 4) {
-      frequency =
-        "Minimum every 12 hrs if score of 0\nMinimum every 4-6 hrs if score 1-4";
+    if (score == 0) {
+      frequency = "Minimum every 12 hrs";
+      response =
+        "Assessment by a competent registered nurse or equivalent, to decide change in frequency of clinical monitoring or escalation of care";
+    } else if (score >= 1 && score <= 4) {
+      frequency = "Minimum every 4-6 hrs";
       response =
         "Assessment by a competent registered nurse or equivalent, to decide change in frequency of clinical monitoring or escalation of care";
     } else if (score >= 5 && score <= 6) {
@@ -692,12 +710,12 @@ async function createAlerts(vitalSigns, patientId) {
     }
 
     condition = {
-        PatientId: patientId,
-        condition: condition,
-        score: score,
-        frequency: frequency,
-        response: response,
-      };
+      PatientId: patientId,
+      condition: condition,
+      score: score,
+      frequency: frequency,
+      response: response,
+    };
 
     // Find existing condition or create a new one
     const [Condition, created] = await Conditions.findOrCreate({

@@ -277,8 +277,8 @@ async function getAdmittedPatients(){
             const birthday = patient?.dateOfBirth?.toISOString()?.split('T')[0]
             const admittedDate = patient?.createdAt?.toISOString().split('T')[0]
 
-            if(patient?.conditions[0]?.condition == "Critical") { criticalPatientCount++ }
-            if(patient?.conditions[0]?.condition == "Unstable") { unstablePatientCount++ }
+            if(patient?.conditions[0]?.condition == "High Risk") { criticalPatientCount++ }
+            if(patient?.conditions[0]?.condition == "Medium Risk") { unstablePatientCount++ }
             return {
                 id: patient.id,
                 hospitalId: patient.hospitalId,
