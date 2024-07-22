@@ -6,7 +6,7 @@ async function addVitalSigns(req,res) {
         const vitals = req.body;
         const patientId = req.body.PatientId;
         const result = await vitalService.addVitalSigns(vitals, patientId);
-        const result2 = await vitalService.createAlerts(vitals, patientId)
+        const result2 = await vitalService.createAlerts(patientId)
         
         if(result.error) {
             return res.status(400).json ({

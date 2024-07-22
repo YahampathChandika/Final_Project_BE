@@ -306,6 +306,7 @@ async function dischargePatient(req, res) {
     }
 }
 
+//ReAdmit Patient
 async function reAdmitPatient(req, res) {
     try {
         const userRole_id = req.user.roleId;
