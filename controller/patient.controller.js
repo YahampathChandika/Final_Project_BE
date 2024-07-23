@@ -180,7 +180,10 @@ async function getPatientById(req, res) {
             patient: result.payload,
             vitalSigns: vitalSigns.payload,
             alerts: alerts.payload,
-            condition: condition.payload
+            condition: condition.payload.condition,
+            frequency: condition.payload.frequency,
+            response: condition.payload.response,
+            score: condition.payload.score
         }
 
 
