@@ -143,6 +143,8 @@ async function getPatientById(req, res) {
         
         // Get patient bio data
         const result = await patientService.getPatientById(id);
+        const result2 = await vitalService.createAlerts(id);
+
         if(result.error) {
             return res.status(result.status).json ({
                 error: true,

@@ -287,9 +287,6 @@ async function oldcreateAlerts(vitalSigns, patientId) {
       });
     }
 
-    // console.log("critical - ",alerts.critical.alertCount)
-    // console.log("bord - ",alerts.borderline.alertCount)
-
     // Determine category
     if (score === 0) {
       condition = "Stable";
@@ -298,8 +295,6 @@ async function oldcreateAlerts(vitalSigns, patientId) {
     } else {
       condition = "Critical";
     }
-
-    console.log(condition, score);
 
     condition = {
       PatientId: patientId,
@@ -407,7 +402,6 @@ async function createAlerts(patientId) {
       avpuScore,
     } = latestValues;
 
-    console.log("================================", latestValues);
     // Initialize alert counters
     let alerts = {
       critical: {
@@ -585,6 +579,7 @@ async function createAlerts(patientId) {
         },
       });
     }
+
 
     // Part 2: Calculate NEWS2 Score and Patient Condition
     let score = 0;
@@ -813,7 +808,7 @@ async function getVitalSigns(patientId) {
   }
 }
 
-//Get Alerts
+//Get Alerts using current vitals
 // async function getAlerts(patientId) {
 //   try {
 //     const patient = await Patients.findByPk(patientId);
@@ -936,6 +931,7 @@ async function getVitalSigns(patientId) {
 //   }
 // }
 
+//Get Alerts
 const getAlerts = async (patientId) => {
   try {
     const patient = await Patients.findByPk(patientId);
@@ -1029,6 +1025,7 @@ const getAlerts = async (patientId) => {
   }
 };
 
+//Edit Vitals
 async function editVitalSigns(id, vitals) {
   try {
     const entry = await VitalSigns.findByPk(id);
@@ -1053,6 +1050,7 @@ async function editVitalSigns(id, vitals) {
   }
 }
 
+//Get Condition
 async function getCondition(patientId) {
   try {
     const condition = await Conditions.findOne({
@@ -1080,6 +1078,36 @@ async function getCondition(patientId) {
   }
 }
 
+//Delete Vitals
+const deleteVitalSign = async (id) => {
+  try {
+    const result = await VitalSigns.destroy({
+      where: { id: id },
+    });
+
+    if (result === 0) {
+      return {
+        error: true,
+        status: 404,
+        payload: "Vital sign not found.",
+      };
+    }
+
+    return {
+      error: false,
+      status: 200,
+      payload: "Vital sign deleted successfully.",
+    };
+  } catch (error) {
+    console.error("Error deleting vital sign:", error);
+    throw {
+      error: true,
+      status: 500,
+      payload: "An error occurred while deleting the vital sign.",
+    };
+  }
+};
+
 module.exports = {
   addVitalSigns,
   getVitalSigns,
@@ -1087,4 +1115,5 @@ module.exports = {
   createAlerts,
   getAlerts,
   getCondition,
+  deleteVitalSign,
 };
