@@ -31,303 +31,303 @@ async function addVitalSigns(vitalSigns, patientId) {
   }
 }
 
-//Create Alerts Old
-async function oldcreateAlerts(vitalSigns, patientId) {
-  try {
-    let score = 0;
-    let condition;
-    let alerts = {
-      critical: {
-        heartRate: null,
-        respiratoryRate: null,
-        supplemented_O2: null,
-        O2saturation: null,
-        temperature: null,
-        systolicBP: null,
-        diastolicBP: null,
-        alertCount: 0,
-        PatientId: patientId,
-      },
-      borderline: {
-        heartRate: null,
-        respiratoryRate: null,
-        supplemented_O2: null,
-        O2saturation: null,
-        temperature: null,
-        systolicBP: null,
-        diastolicBP: null,
-        alertCount: 0,
-        PatientId: patientId,
-      },
-    };
+// //Create Alerts Old
+// async function oldcreateAlerts(vitalSigns, patientId) {
+//   try {
+//     let score = 0;
+//     let condition;
+//     let alerts = {
+//       critical: {
+//         heartRate: null,
+//         respiratoryRate: null,
+//         supplemented_O2: null,
+//         O2saturation: null,
+//         temperature: null,
+//         systolicBP: null,
+//         diastolicBP: null,
+//         alertCount: 0,
+//         PatientId: patientId,
+//       },
+//       borderline: {
+//         heartRate: null,
+//         respiratoryRate: null,
+//         supplemented_O2: null,
+//         O2saturation: null,
+//         temperature: null,
+//         systolicBP: null,
+//         diastolicBP: null,
+//         alertCount: 0,
+//         PatientId: patientId,
+//       },
+//     };
 
-    const {
-      heartRate,
-      respiratoryRate,
-      supplemented_O2,
-      O2saturation,
-      temperature,
-      systolicBP,
-      diastolicBP,
-    } = vitalSigns;
+//     const {
+//       heartRate,
+//       respiratoryRate,
+//       supplemented_O2,
+//       O2saturation,
+//       temperature,
+//       systolicBP,
+//       diastolicBP,
+//     } = vitalSigns;
 
-    // Heart Rate ----------------------->
-    if (heartRate < 50 || heartRate > 110) {
-      score += 3;
-      alerts.critical.alertCount += 1;
-      switch (true) {
-        case heartRate < 60: {
-          alerts.critical.heartRate = "Bradycardia low Heart Rate";
-          break;
-        }
-        case heartRate > 100: {
-          alerts.critical.heartRate = "Tachycardia high Heart Rate";
-          break;
-        }
-        default: {
-          // alerts.heartRate = null;
-        }
-      }
-    } else if (
-      (heartRate >= 50 && heartRate <= 59) ||
-      (heartRate >= 101 && heartRate <= 110)
-    ) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      switch (true) {
-        case heartRate < 60: {
-          alerts.borderline.heartRate = "Bradycardia low Heart Rate";
-          break;
-        }
-        case heartRate > 100: {
-          alerts.borderline.heartRate = "Tachycardia high Heart Rate";
-          break;
-        }
-        default: {
-          // alerts.heartRate = null;
-        }
-      }
-    }
+//     // Heart Rate ----------------------->
+//     if (heartRate < 50 || heartRate > 110) {
+//       score += 3;
+//       alerts.critical.alertCount += 1;
+//       switch (true) {
+//         case heartRate < 60: {
+//           alerts.critical.heartRate = "Bradycardia low Heart Rate";
+//           break;
+//         }
+//         case heartRate > 100: {
+//           alerts.critical.heartRate = "Tachycardia high Heart Rate";
+//           break;
+//         }
+//         default: {
+//           // alerts.heartRate = null;
+//         }
+//       }
+//     } else if (
+//       (heartRate >= 50 && heartRate <= 59) ||
+//       (heartRate >= 101 && heartRate <= 110)
+//     ) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       switch (true) {
+//         case heartRate < 60: {
+//           alerts.borderline.heartRate = "Bradycardia low Heart Rate";
+//           break;
+//         }
+//         case heartRate > 100: {
+//           alerts.borderline.heartRate = "Tachycardia high Heart Rate";
+//           break;
+//         }
+//         default: {
+//           // alerts.heartRate = null;
+//         }
+//       }
+//     }
 
-    // Respiratory Rate------------------------------>
-    if (respiratoryRate < 10 || respiratoryRate > 24) {
-      score += 3;
-      alerts.critical.alertCount += 1;
-      switch (true) {
-        case respiratoryRate < 12: {
-          alerts.critical.respiratoryRate = "Bradypnea low Respiratory Rate";
-          break;
-        }
-        case respiratoryRate > 20: {
-          alerts.critical.respiratoryRate = "Tachypnea high Respiratory Rate";
-          break;
-        }
-        default: {
-          // alerts.respiratoryRate = null;
-        }
-      }
-    } else if (
-      (respiratoryRate >= 10 && respiratoryRate <= 11) ||
-      (respiratoryRate >= 21 && respiratoryRate <= 24)
-    ) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      switch (true) {
-        case respiratoryRate < 12: {
-          alerts.borderline.respiratoryRate = "Bradypnea low Respiratory Rate";
-          break;
-        }
-        case respiratoryRate > 20: {
-          alerts.borderline.respiratoryRate = "Tachypnea high Respiratory Rate";
-          break;
-        }
-        default: {
-          // alerts.respiratoryRate = null;
-        }
-      }
-    }
+//     // Respiratory Rate------------------------------>
+//     if (respiratoryRate < 10 || respiratoryRate > 24) {
+//       score += 3;
+//       alerts.critical.alertCount += 1;
+//       switch (true) {
+//         case respiratoryRate < 12: {
+//           alerts.critical.respiratoryRate = "Bradypnea low Respiratory Rate";
+//           break;
+//         }
+//         case respiratoryRate > 20: {
+//           alerts.critical.respiratoryRate = "Tachypnea high Respiratory Rate";
+//           break;
+//         }
+//         default: {
+//           // alerts.respiratoryRate = null;
+//         }
+//       }
+//     } else if (
+//       (respiratoryRate >= 10 && respiratoryRate <= 11) ||
+//       (respiratoryRate >= 21 && respiratoryRate <= 24)
+//     ) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       switch (true) {
+//         case respiratoryRate < 12: {
+//           alerts.borderline.respiratoryRate = "Bradypnea low Respiratory Rate";
+//           break;
+//         }
+//         case respiratoryRate > 20: {
+//           alerts.borderline.respiratoryRate = "Tachypnea high Respiratory Rate";
+//           break;
+//         }
+//         default: {
+//           // alerts.respiratoryRate = null;
+//         }
+//       }
+//     }
 
-    // Supplemental O2 -------------------------->
-    if (supplemented_O2 > 8) {
-      score += 3;
-      alerts.critical.supplemented_O2 = "Hypoxemia high Supplimental O2";
-      alerts.critical.alertCount += 1;
-    } else if (supplemented_O2 >= 5 && supplemented_O2 <= 8) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      alerts.borderline.supplemented_O2 = "Hypoxemia high Supplimental O2";
-    }
+//     // Supplemental O2 -------------------------->
+//     if (supplemented_O2 > 8) {
+//       score += 3;
+//       alerts.critical.supplemented_O2 = "Hypoxemia high Supplimental O2";
+//       alerts.critical.alertCount += 1;
+//     } else if (supplemented_O2 >= 5 && supplemented_O2 <= 8) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       alerts.borderline.supplemented_O2 = "Hypoxemia high Supplimental O2";
+//     }
 
-    // Saturation O2 ---------------------------->
-    if (O2saturation < 90) {
-      score += 3;
-      alerts.critical.alertCount += 1;
-      alerts.critical.O2saturation = "Hypoxemia low O2 Saturation";
-    } else if (O2saturation >= 90 && O2saturation <= 94) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      alerts.borderline.O2saturation = "Hypoxemia low O2 Saturation";
-    }
+//     // Saturation O2 ---------------------------->
+//     if (O2saturation < 90) {
+//       score += 3;
+//       alerts.critical.alertCount += 1;
+//       alerts.critical.O2saturation = "Hypoxemia low O2 Saturation";
+//     } else if (O2saturation >= 90 && O2saturation <= 94) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       alerts.borderline.O2saturation = "Hypoxemia low O2 Saturation";
+//     }
 
-    // Blood Pressure (Systolic) ---------------------------->
-    if (systolicBP < 90 || systolicBP > 140) {
-      score += 3;
-      alerts.critical.alertCount += 1;
-      switch (true) {
-        case systolicBP < 90: {
-          alerts.critical.systolicBP = "Hypotension low Systolic BP";
-          break;
-        }
-        case systolicBP > 120: {
-          alerts.critical.systolicBP = "Hypertension high Systolic BP";
-          break;
-        }
-        default: {
-          // alerts.systolicBP = null;
-        }
-      }
-    } else if (systolicBP >= 121 && systolicBP <= 140) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      alerts.borderline.systolicBP = "Hypertension high Systolic BP";
-    }
+//     // Blood Pressure (Systolic) ---------------------------->
+//     if (systolicBP < 90 || systolicBP > 140) {
+//       score += 3;
+//       alerts.critical.alertCount += 1;
+//       switch (true) {
+//         case systolicBP < 90: {
+//           alerts.critical.systolicBP = "Hypotension low Systolic BP";
+//           break;
+//         }
+//         case systolicBP > 120: {
+//           alerts.critical.systolicBP = "Hypertension high Systolic BP";
+//           break;
+//         }
+//         default: {
+//           // alerts.systolicBP = null;
+//         }
+//       }
+//     } else if (systolicBP >= 121 && systolicBP <= 140) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       alerts.borderline.systolicBP = "Hypertension high Systolic BP";
+//     }
 
-    // Blood Pressure (Diastolic)
-    if (diastolicBP < 60 || diastolicBP > 90) {
-      score += 3;
-      alerts.critical.alertCount += 1;
-      switch (true) {
-        case diastolicBP < 60: {
-          alerts.critical.diastolicBP = "Hypotension low Diastolic BP";
-          break;
-        }
-        case diastolicBP > 90: {
-          alerts.critical.diastolicBP = "Hypertension high Diastolic BP";
-          break;
-        }
-        default: {
-          // alerts.diastolicBP = null;
-        }
-      }
-    } else if (diastolicBP >= 81 && diastolicBP <= 90) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      alerts.borderline.diastolicBP = "Hypertension high Diastolic BP";
-    }
+//     // Blood Pressure (Diastolic)
+//     if (diastolicBP < 60 || diastolicBP > 90) {
+//       score += 3;
+//       alerts.critical.alertCount += 1;
+//       switch (true) {
+//         case diastolicBP < 60: {
+//           alerts.critical.diastolicBP = "Hypotension low Diastolic BP";
+//           break;
+//         }
+//         case diastolicBP > 90: {
+//           alerts.critical.diastolicBP = "Hypertension high Diastolic BP";
+//           break;
+//         }
+//         default: {
+//           // alerts.diastolicBP = null;
+//         }
+//       }
+//     } else if (diastolicBP >= 81 && diastolicBP <= 90) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       alerts.borderline.diastolicBP = "Hypertension high Diastolic BP";
+//     }
 
-    // Temperature (Fahrenheit)
-    if (temperature < 95.0 || temperature > 100.4) {
-      score += 3;
-      alerts.critical.alertCount += 1;
-      switch (true) {
-        case temperature < 95: {
-          alerts.critical.temperature = "Hypothermia low Temperature";
-          break;
-        }
-        case temperature > 100.4: {
-          alerts.critical.temperature = "Fever high Temperature";
-          break;
-        }
-        default: {
-          // alerts.temperature = null;
-        }
-      }
-    } else if (
-      (temperature >= 95.0 && temperature <= 97.5) ||
-      (temperature >= 99.5 && temperature <= 100.4)
-    ) {
-      score += 1;
-      alerts.borderline.alertCount += 1;
-      switch (true) {
-        case temperature <= 97.5: {
-          alerts.borderline.temperature = "Hypothermia low Temperature";
-          break;
-        }
-        case temperature >= 99.5: {
-          alerts.borderline.temperature = "Fever high Temperature";
-          break;
-        }
-        default: {
-          // alerts.temperature = null;
-        }
-      }
-    }
+//     // Temperature (Fahrenheit)
+//     if (temperature < 95.0 || temperature > 100.4) {
+//       score += 3;
+//       alerts.critical.alertCount += 1;
+//       switch (true) {
+//         case temperature < 95: {
+//           alerts.critical.temperature = "Hypothermia low Temperature";
+//           break;
+//         }
+//         case temperature > 100.4: {
+//           alerts.critical.temperature = "Fever high Temperature";
+//           break;
+//         }
+//         default: {
+//           // alerts.temperature = null;
+//         }
+//       }
+//     } else if (
+//       (temperature >= 95.0 && temperature <= 97.5) ||
+//       (temperature >= 99.5 && temperature <= 100.4)
+//     ) {
+//       score += 1;
+//       alerts.borderline.alertCount += 1;
+//       switch (true) {
+//         case temperature <= 97.5: {
+//           alerts.borderline.temperature = "Hypothermia low Temperature";
+//           break;
+//         }
+//         case temperature >= 99.5: {
+//           alerts.borderline.temperature = "Fever high Temperature";
+//           break;
+//         }
+//         default: {
+//           // alerts.temperature = null;
+//         }
+//       }
+//     }
 
-    // Find existing critical alert or create a new one
-    const [alertC, createdC] = await CriticalAlerts.findOrCreate({
-      where: {
-        PatientId: patientId,
-      },
-      defaults: alerts.critical,
-    });
+//     // Find existing critical alert or create a new one
+//     const [alertC, createdC] = await CriticalAlerts.findOrCreate({
+//       where: {
+//         PatientId: patientId,
+//       },
+//       defaults: alerts.critical,
+//     });
 
-    if (!createdC) {
-      // Update the existing critical alert
-      await CriticalAlerts.update(alerts.critical, {
-        where: {
-          PatientId: patientId,
-        },
-      });
-    }
+//     if (!createdC) {
+//       // Update the existing critical alert
+//       await CriticalAlerts.update(alerts.critical, {
+//         where: {
+//           PatientId: patientId,
+//         },
+//       });
+//     }
 
-    // Find existing borderline alert or create a new one
-    const [alertB, createdB] = await BorderlineAlerts.findOrCreate({
-      where: {
-        PatientId: patientId,
-      },
-      defaults: alerts.borderline,
-    });
+//     // Find existing borderline alert or create a new one
+//     const [alertB, createdB] = await BorderlineAlerts.findOrCreate({
+//       where: {
+//         PatientId: patientId,
+//       },
+//       defaults: alerts.borderline,
+//     });
 
-    if (!createdB) {
-      // Update the existing borderline alert
-      await BorderlineAlerts.update(alerts.borderline, {
-        where: {
-          PatientId: patientId,
-        },
-      });
-    }
+//     if (!createdB) {
+//       // Update the existing borderline alert
+//       await BorderlineAlerts.update(alerts.borderline, {
+//         where: {
+//           PatientId: patientId,
+//         },
+//       });
+//     }
 
-    // Determine category
-    if (score === 0) {
-      condition = "Stable";
-    } else if (score === 1 || score === 2) {
-      condition = "Unstable";
-    } else {
-      condition = "Critical";
-    }
+//     // Determine category
+//     if (score === 0) {
+//       condition = "Stable";
+//     } else if (score === 1 || score === 2) {
+//       condition = "Unstable";
+//     } else {
+//       condition = "Critical";
+//     }
 
-    condition = {
-      PatientId: patientId,
-      condition: condition,
-    };
+//     condition = {
+//       PatientId: patientId,
+//       condition: condition,
+//     };
 
-    // Find existing borderline alert or create a new one
-    const [Condition, created] = await Conditions.findOrCreate({
-      where: {
-        PatientId: patientId,
-      },
-      defaults: condition,
-    });
+//     // Find existing borderline alert or create a new one
+//     const [Condition, created] = await Conditions.findOrCreate({
+//       where: {
+//         PatientId: patientId,
+//       },
+//       defaults: condition,
+//     });
 
-    if (!created) {
-      // Update the existing borderline alert
-      await Conditions.update(condition, {
-        where: {
-          PatientId: patientId,
-        },
-      });
-    }
+//     if (!created) {
+//       // Update the existing borderline alert
+//       await Conditions.update(condition, {
+//         where: {
+//           PatientId: patientId,
+//         },
+//       });
+//     }
 
-    return {
-      error: false,
-      status: 200,
-      payload: "Alerts Updated Successfully!",
-    };
-  } catch (error) {
-    console.log("Error Creating Alerts Service: ", error);
-    throw error;
-  }
-}
+//     return {
+//       error: false,
+//       status: 200,
+//       payload: "Alerts Updated Successfully!",
+//     };
+//   } catch (error) {
+//     console.log("Error Creating Alerts Service: ", error);
+//     throw error;
+//   }
+// }
 
 //Create Alerts Using NEWS
 async function createAlerts(patientId) {
