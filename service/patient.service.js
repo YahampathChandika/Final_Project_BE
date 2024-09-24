@@ -422,9 +422,49 @@ async function dischargePatient(patientId) {
     }
 }
 
+//Re-Admit Patient
 async function reAdmitPatient(patientId, admission) {
     try {
         console.log("test admission: ",admission);
+        const patient = await Patients.findByPk(patientId);
+
+        if(!patient) {
+            return {
+                error: true,
+                status: 404,
+                payload: "Patient not Found."
+            }
+        } else if(patient.status == "Admitted") {
+            return {
+                error: true,
+                status: 400,
+                payload: "Patient is already admitted"
+            }
+        } else {
+            await Admissions.create({
+                PatientId: patientId,
+                diagnosis: admission.diagnosis,
+                bedId: admission.bedId,
+            });
+
+            await patient.update({status: "Admitted"});
+            await Beds.update({available: false}, {where: {id: admission.bedId}})
+
+            return {
+                error: false,
+                status: 200,
+                payload: "Patient Admitted Succesfully"
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+//Add patient notes
+async function addNotes(patientId, admission) {
+    try {
         const patient = await Patients.findByPk(patientId);
 
         if(!patient) {

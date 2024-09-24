@@ -329,7 +329,7 @@ async function addVitalSigns(vitalSigns, patientId) {
 //   }
 // }
 
-//Create Alerts Using NEWS
+//Create Alerts Using NEWS2 
 async function createAlerts(patientId) {
   try {
     // Fetch the latest vital signs for the patient from the past 24 hours
@@ -690,15 +690,15 @@ async function createAlerts(patientId) {
       response =
         "Assessment by a competent registered nurse or equivalent, to decide change in frequency of clinical monitoring or escalation of care";
     } else if (score >= 5 && score <= 6) {
-      frequency = "Minimum every hr";
+      frequency = "Minimum every hour";
       response =
         "Urgent review by a ward-based doctor or acute team nurse, to decide if critical care team assessment is needed";
     } else if (score >= 7) {
-      frequency = "Continuous monitoring of vital signs";
+      frequency = "Continuous monitoring";
       response =
         "Emergent assessment by a clinical team or critical care team and usually transfer to higher level of care";
     } else if (score === 3 && alerts.critical.alertCount > 0) {
-      frequency = "Minimum every hr";
+      frequency = "Minimum every hour";
       response =
         "Urgent review by a ward-based doctor, to decide change in frequency of clinical monitoring or escalation of care";
     }

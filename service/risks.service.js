@@ -111,7 +111,7 @@ async function getEnhancedRiskPrediction(patientId) {
       const lastValue = filteredValues[filteredValues.length - 1];
       const meanValue = mean(filteredValues);
       const stdDev = std(filteredValues);
-      const threshold = 2 * stdDev; // Define how many standard deviations to consider as abnormal
+      const threshold = 1 * stdDev; // Define how many standard deviations to consider as abnormal
 
       let change = {
         name: name,
