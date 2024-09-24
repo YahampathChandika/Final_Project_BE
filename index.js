@@ -24,10 +24,13 @@ try {
 
     db.Admissions.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId", onDelete: 'cascade'});
     db.Patients.hasMany(db.Admissions, { as: "admissions", foreignKey: "PatientId"});
+
     db.VitalSigns.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
     db.Patients.hasMany(db.VitalSigns, { as: "vital_signs", foreignKey: "PatientId"});
+
     db.Users.belongsTo(db.UserRoles, { as: "roles", foreignKey: "roleId"});
     db.UserRoles.hasMany(db.Users, {as: "users", foreignKey: "roleId"});
+
     db.Admissions.belongsTo(db.Beds, {as: "bed", foreignKey: "bedId"});
     db.Beds.hasMany(db.Admissions, {as: "admissions", foreignKey: "bedId"});
 
@@ -40,7 +43,8 @@ try {
     db.BorderlineAlerts.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
     db.Patients.hasMany(db.BorderlineAlerts, { as: "borderlineAlerts", foreignKey: "PatientId"});
 
-    
+    db.Notes.belongsTo(db.Patients, { as: "patients", foreignKey: "PatientId"});
+    db.Patients.hasMany(db.Notes, { as: "notes", foreignKey: "PatientId"});
 
 } catch (error) {
     console.log(error);

@@ -205,6 +205,15 @@ async function getPatientById(req, res) {
       });
     }
 
+    //get patient notes
+    const notes = await patientService.getNotes(id);
+    if (notes.error) {
+      return res.status(notes.status).json({
+        error: true,
+        payload: notes.payload,
+      });
+    }
+
     // var response = {
     //   patient: result.payload,
     //   vitalSigns: vitalSigns.payload,
@@ -220,13 +229,14 @@ async function getPatientById(req, res) {
       patient: result.payload,
       vitalSigns: vitalSigns.payload,
       alerts: alerts.payload,
-      instructions : {
+      instructions: {
         condition: condition.payload.condition,
         frequency: condition.payload.frequency,
         response: condition.payload.response,
         score: condition.payload.score,
       },
       risks: risks.payload,
+      notes: notes.payload,
     };
 
     if (result.error) {
@@ -400,6 +410,52 @@ async function reAdmitPatient(req, res) {
   }
 }
 
+//Add Notes
+async function addNotes(req, res) {
+  try {
+    const userRole_id = req.user.roleId; // Assume user role is coming from JWT
+
+    // Only roles with ID 1 and 2 (Doctors) are allowed to add notes
+    if (![1, 2].includes(userRole_id)) {
+      return res.status(403).json({
+        error: true,
+        payload: "Unauthorized! Only doctors can add notes to patients.",
+      });
+    }
+
+    // Validate request body
+    const { patientId, name, note } = req.body;
+
+    if (!patientId || !note) {
+      return res.status(400).json({
+        error: true,
+        payload: "Patient ID and note are required.",
+      });
+    }
+
+    // Call service to add notes
+    const result = await patientService.addNotes({ patientId, name, note });
+
+    if (result.error) {
+      return res.status(result.status).json({
+        error: true,
+        payload: result.payload,
+      });
+    } else {
+      return res.status(result.status).json({
+        error: false,
+        payload: result.payload,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      payload: error.message,
+    });
+  }
+}
+
+
 module.exports = {
   registerPatient,
   getAllPatients,
@@ -411,4 +467,5 @@ module.exports = {
   getAllPatientMatrices,
   dischargePatient,
   reAdmitPatient,
+  addNotes,
 };

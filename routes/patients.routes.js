@@ -18,6 +18,7 @@ function getPatientRoutes(){
     router.delete("/deletePatient/:id", patientController.deletePatient);
     router.patch("/dischargePatient/:patientId", patientController.dischargePatient);
     router.post("/reAdmit/:patientId", patientController.reAdmitPatient);
+    router.post("/addNotes", patientController.addNotes);
 
     return router;
 }
