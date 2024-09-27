@@ -7,7 +7,6 @@ const dotEnv = require("dotenv")
 dotEnv.config()
 
 const PORT = process.env.PORT || 4000;
-const HOST = process.env.HOST || " 44.208.32.102"
 app.use(express.json());
 app.use(cors());
 
@@ -54,7 +53,5 @@ db.sequelize.sync({ alter: true }).then(() => {
     app.listen(PORT, () => {
         console.log("SERVER RUNNING ON PORT 4000");
     });
-
-    // app.listen(PORT,HOST,() => console.log(`Server running on ${HOST} at ${PORT}`));
 })
 
